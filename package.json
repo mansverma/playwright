@@ -8,7 +8,13 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
-    "report": "playwright show-report"
+    "test:ci": "playwright test --reporter=junit",
+    "test:desktop": "playwright test --project='Desktop Chrome' --project='Desktop Safari'",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:chrome": "playwright test --project='Desktop Chrome' --project='Mobile Chrome'",
+    "test:safari": "playwright test --project='Desktop Safari' --project='Mobile Safari'",
+    "report": "playwright show-report",
+    "install:browsers": "playwright install"
   },
   "repository": {
     "type": "git",

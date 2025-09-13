@@ -1,16 +1,16 @@
 version: 2.1
 
-# Define executors for different environments
+# Define executors
 executors:
   playwright-executor:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.40.0-focal
+      - image: mcr.microsoft.com/playwright:v1.55.0-jammy
     working_directory: ~/project
     environment:
       NODE_ENV: test
       CI: true
 
-# Define reusable commands
+# Reusable commands
 commands:
   install_dependencies:
     description: "Install Node.js dependencies"
@@ -27,33 +27,25 @@ commands:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
-  run_playwright_tests:
-    description: "Run Playwright tests"
+  run_script:
+    description: "Run npm script"
     parameters:
-      project:
+      script:
         type: string
-        default: ""
     steps:
       - run:
-          name: Run Playwright Tests << parameters.project >>
-          command: |
-            if [ -n "<< parameters.project >>" ]; then
-              npx playwright test --project="<< parameters.project >>"
-            else
-              npx playwright test
-            fi
-          environment:
-            PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+          name: Run npm script << parameters.script >>
+          command: npm run << parameters.script >>
 
-# Define jobs
+# Jobs
 jobs:
-  # Job to run all tests
   test-all:
     executor: playwright-executor
     steps:
       - checkout
       - install_dependencies
-      - run_playwright_tests
+      - run_script:
+          script: test:ci
       - store_artifacts:
           path: playwright-report/
           destination: playwright-report
@@ -63,16 +55,13 @@ jobs:
       - store_test_results:
           path: test-results/
 
-  # Job to run only desktop tests
   test-desktop:
     executor: playwright-executor
     steps:
       - checkout
       - install_dependencies
-      - run_playwright_tests:
-          project: "Desktop Chrome"
-      - run_playwright_tests:
-          project: "Desktop Safari"
+      - run_script:
+          script: test:desktop
       - store_artifacts:
           path: playwright-report/
           destination: playwright-report-desktop
@@ -80,16 +69,13 @@ jobs:
           path: test-results/
           destination: test-results-desktop
 
-  # Job to run only mobile tests
   test-mobile:
     executor: playwright-executor
     steps:
       - checkout
       - install_dependencies
-      - run_playwright_tests:
-          project: "Mobile Chrome"
-      - run_playwright_tests:
-          project: "Mobile Safari"
+      - run_script:
+          script: test:mobile
       - store_artifacts:
           path: playwright-report/
           destination: playwright-report-mobile
@@ -97,20 +83,17 @@ jobs:
           path: test-results/
           destination: test-results-mobile
 
-# Define workflows
+# Workflows
 workflows:
   version: 2
   test-workflow:
     jobs:
-      # Run all tests on main branch
       - test-all:
           filters:
             branches:
               only:
                 - main
                 - master
-      
-      # Run parallel desktop and mobile tests on feature branches
       - test-desktop:
           filters:
             branches:
@@ -124,11 +107,10 @@ workflows:
                 - main
                 - master
 
-  # Nightly workflow to run full test suite
   nightly-tests:
     triggers:
       - schedule:
-          cron: "0 2 * * *" # Run at 2 AM UTC daily
+          cron: "0 2 * * *" # 2 AM UTC daily
           filters:
             branches:
               only:

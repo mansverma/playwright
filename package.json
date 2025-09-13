@@ -1,20 +1,20 @@
 {
   "name": "playwright",
-  "version": "1.0.0",
+  "version": "1.5.5",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "test:ci": "playwright test --reporter=junit",
-    "test:desktop": "playwright test --project='Desktop Chrome' --project='Desktop Safari'",
-    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
-    "test:chrome": "playwright test --project='Desktop Chrome' --project='Mobile Chrome'",
-    "test:safari": "playwright test --project='Desktop Safari' --project='Mobile Safari'",
-    "report": "playwright show-report",
-    "install:browsers": "playwright install"
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "test:ci": "npx playwright test --reporter=junit",
+    "test:desktop": "npx playwright test --project='Desktop Chrome' --project='Desktop Safari'",
+    "test:mobile": "npx playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:chrome": "npx playwright test --project='Desktop Chrome' --project='Mobile Chrome'",
+    "test:safari": "npx playwright test --project='Desktop Safari' --project='Mobile Safari'",
+    "report": "npx playwright show-report",
+    "install:browsers": "npx playwright install"
   },
   "repository": {
     "type": "git",

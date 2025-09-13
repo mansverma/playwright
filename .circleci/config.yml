@@ -1,6 +1,8 @@
 version: 2.1
 
-# Define executors
+# ============================================================
+# 🔧 Executors
+# ============================================================
 executors:
   playwright-executor:
     docker:
@@ -10,37 +12,50 @@ executors:
       NODE_ENV: test
       CI: true
 
-# Reusable commands
+# ============================================================
+# 📦 Reusable Commands
+# ============================================================
 commands:
   install_dependencies:
-    description: "Install Node.js dependencies"
+    description: "📥 Install Node.js dependencies with cache"
     steps:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run:
-          name: Install dependencies
-          command: npm ci
+          name: "📦 Install dependencies"
+          command: |
+            echo "🔧 Installing dependencies..."
+            npm ci
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
   run_script:
-    description: "Run npm script"
+    description: "▶️ Run npm script with enhanced logging"
     parameters:
       script:
         type: string
     steps:
       - run:
-          name: Run npm script << parameters.script >>
-          command: npm run << parameters.script >>
+          name: "🚀 Run npm script: << parameters.script >>"
+          command: |
+            echo "🔎 Running: npm run << parameters.script >>"
+            npm run << parameters.script >> || {
+              echo -e "\033[0;31m❌ Tests failed!\033[0m"
+              exit 1
+            }
+            echo -e "\033[0;32m✅ Tests passed successfully!\033[0m"
 
-# Jobs
+# ============================================================
+# 🧪 Jobs
+# ============================================================
 jobs:
   test-all:
     executor: playwright-executor
+    parallelism: 2
     steps:
       - checkout
       - install_dependencies
@@ -83,9 +98,13 @@ jobs:
           path: test-results/
           destination: test-results-mobile
 
-# Workflows
+# ============================================================
+# 🔄 Workflows
+# ============================================================
 workflows:
   version: 2
+
+  # 🚀 Run tests on push
   test-workflow:
     jobs:
       - test-all:
@@ -107,10 +126,11 @@ workflows:
                 - main
                 - master
 
+  # 🌙 Nightly regression tests
   nightly-tests:
     triggers:
       - schedule:
-          cron: "0 2 * * *" # 2 AM UTC daily
+          cron: "0 2 * * *"   # ⏰ Every day at 2 AM UTC
           filters:
             branches:
               only:

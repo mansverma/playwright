@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mansverma/playwright/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mansverma/playwright/tree/main)
+
 # Playwright E2E Test Automation
 
 A comprehensive end-to-end test automation framework built with [Playwright](https://playwright.dev/), featuring cross-browser testing for web applications.

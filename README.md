@@ -1,4 +1,4 @@
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mansverma/playwright/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mansverma/playwright/tree/main)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mansverma/playwright/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/mansverma/playwright/tree/main)
 
 # Playwright E2E Test Automation
 
